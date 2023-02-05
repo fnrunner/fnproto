@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package executor;
+option go_package = "github.com/fnrunner/fnproto/pkg/executor/executorpb";
+
+// Executor of the KRM function
+service FunctionExecutor {
+    rpc ExecuteFunction(ExecuteFunctionRequest) returns (ExecuteFunctionResponse) {}
+}
+
+message ExecuteFunctionRequest {
+    // Serialized resourceContext
+    bytes resourceContext = 1;
+}
+
+message ExecuteFunctionResponse {
+    // Serialized resourceContext, including structured function results
+    bytes resourceContext = 1;
+
+    // Additional log produced by the fucntion if any
+    bytes log = 2;
+}
