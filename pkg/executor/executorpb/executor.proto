@@ -11,6 +11,8 @@ service FunctionExecutor {
 message ExecuteFunctionRequest {
     // Serialized resourceContext
     bytes resourceContext = 1;
+    // the image associated with the execution request
+    string image = 2;
 }
 
 message ExecuteFunctionResponse {
