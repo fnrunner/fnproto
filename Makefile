@@ -16,7 +16,8 @@ all :$(generate)
 .PHONY: generate
 generate: protoc-gen-gofast protoc-gen-go-grpc
 	echo $(GOBIN)
-	protoc -I . $(shell find ./pkg/ -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
+	protoc -I . $(shell find ./pkg/executor/executorpb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
+	protoc -I . $(shell find ./pkg/service/servicepb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
 
 
 ##@ Build Dependencies

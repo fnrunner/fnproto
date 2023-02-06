@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package execclient
+package svcclient
 
 import (
 	"context"
@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fnrunner/fnproto/pkg/executor/executorpb"
+	"github.com/fnrunner/fnproto/pkg/service/servicepb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
@@ -34,7 +34,7 @@ const (
 )
 
 type Client interface {
-	Get() executorpb.FunctionExecutorClient
+	Get() servicepb.FunctionServiceClient
 	Close() error
 }
 
@@ -46,9 +46,9 @@ func New(cfg *Config) (Client, error) {
 }
 
 type client struct {
-	cfg        *Config
-	conn       *grpc.ClientConn
-	execclient executorpb.FunctionExecutorClient
+	cfg       *Config
+	conn      *grpc.ClientConn
+	svcclient servicepb.FunctionServiceClient
 }
 
 func (r *client) create() error {
@@ -76,13 +76,13 @@ func (r *client) create() error {
 		return err
 	}
 	//defer conn.Close()
-	r.execclient = executorpb.NewFunctionExecutorClient(r.conn)
+	r.svcclient = servicepb.NewFunctionServiceClient(r.conn)
 
 	return nil
 }
 
-func (r *client) Get() executorpb.FunctionExecutorClient {
-	return r.execclient
+func (r *client) Get() servicepb.FunctionServiceClient {
+	return r.svcclient
 }
 
 func (r *client) Close() error {
