@@ -11,10 +11,16 @@ endif
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
+.PHONY: all
 all :$(generate)
+
+.PHONY: help
+help: ## Display this help.
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 .PHONY: generate
 generate: protoc-gen-go protoc-gen-gofast protoc-gen-go-grpc
+	echo $(protoc-gen-go-grpc)
 	echo $(LOCALBIN)
 	protoc -I . $(shell find ./pkg/executor/executorpb -name '*.proto') --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative
 	protoc -I . $(shell find ./pkg/service/servicepb -name '*.proto') --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative

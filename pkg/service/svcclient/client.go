@@ -56,7 +56,7 @@ func (r *client) create() error {
 		return fmt.Errorf("must provide non-nil Config")
 	}
 	var opts []grpc.DialOption
-	fmt.Printf("grpc client config: %v\n", r.cfg)
+	//fmt.Printf("grpc client config: %v\n", r.cfg)
 	if r.cfg.Insecure {
 		//opts = append(opts, grpc.WithInsecure())
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
