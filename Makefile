@@ -14,10 +14,13 @@ SHELL = /usr/bin/env bash -o pipefail
 all :$(generate)
 
 .PHONY: generate
-generate: protoc-gen-gofast protoc-gen-go-grpc
-	echo $(GOBIN)
-	protoc -I . $(shell find ./pkg/executor/executorpb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
-	protoc -I . $(shell find ./pkg/service/servicepb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
+generate: protoc-gen-go protoc-gen-gofast protoc-gen-go-grpc
+	echo $(LOCALBIN)
+	protoc -I . $(shell find ./pkg/executor/executorpb -name '*.proto') --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative
+	protoc -I . $(shell find ./pkg/service/servicepb -name '*.proto') --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative
+
+## protoc -I . $(shell find ./pkg/executor/executorpb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
+##protoc -I . $(shell find ./pkg/service/servicepb -name '*.proto') --gofast_out=. --gofast_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative
 
 
 ##@ Build Dependencies
@@ -28,12 +31,19 @@ $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
 ## Tool binaries
+PROTOC_GO ?= $(LOCALBIN)/protoc-gen-go
 PROTOC_GO_FAST ?= $(LOCALBIN)/protoc-gen-gofast
 PROTOC_GO_GRPC ?= $(LOCALBIN)/protoc-gen-go-grpc
 
 ## Tool Versions
+PROTOC_GO_VERSION ?= latest
 PROTOC_GO_FAST_VERSION ?= latest
 PROTOC_GO_GRPC_VERSION ?= latest
+
+.PHONY: protoc-gen-go
+protoc-gen-gofast: $(PROTOC_GO) ## Download protoc-gen-gofast locally if necessary.
+$(PROTOC_GO): $(LOCALBIN)
+	test -s $(LOCALBIN)/protoc-gen-go || GOBIN=$(LOCALBIN) go install google.golang.org/protobuf/cmd/protoc-gen-go@$(PROTOC_GO_VERSION)
 
 
 .PHONY: protoc-gen-gofast
