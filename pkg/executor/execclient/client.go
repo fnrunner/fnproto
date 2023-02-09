@@ -34,6 +34,7 @@ const (
 )
 
 type Client interface {
+	GetConfig() Config
 	Get() executorpb.FunctionExecutorClient
 	Close() error
 }
@@ -79,6 +80,13 @@ func (r *client) create() error {
 	r.execclient = executorpb.NewFunctionExecutorClient(r.conn)
 
 	return nil
+}
+
+func (r *client) GetConfig() Config {
+	if r.cfg == nil {
+		return Config{}
+	}
+	return *r.cfg
 }
 
 func (r *client) Get() executorpb.FunctionExecutorClient {
