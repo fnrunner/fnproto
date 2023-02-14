@@ -29,6 +29,8 @@ message ExecuteFunctionRequest {
     bytes resourceContext = 1;
     // the image associated with the execution request
     string image = 2;
+    // the controller associated with the execution request
+    string controller = 3;
 }
 
 message ExecuteFunctionResponse {

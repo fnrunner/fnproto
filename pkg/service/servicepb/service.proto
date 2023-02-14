@@ -32,6 +32,8 @@ message FunctionServiceRequest {
   bytes resource = 1;
   // the image associated with the service request
   string image = 2;
+  // the controller associated with the execution request
+  string controller = 3;
 }
 
 message FunctionServiceResponse {
